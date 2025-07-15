@@ -3,16 +3,6 @@ set -e
 
 ## Made by Pierre B. - ESGI 2025
 
-sudo dnf update -y && sudo dnf upgrade -y
-sudo systemctl disable --now firewalld
-
-sudo dnf install -y dnf-plugins-core
-sudo dnf config-manager addrepo --from-repofile=https://download.docker.com/linux/fedora/docker-ce.repo --overwrite
-sudo dnf install -y docker-ce docker-ce-cli containerd.io
-sudo systemctl enable --now docker
-
-sudo usermod -aG docker $USER
-# newgrp docker
 docker run --rm hello-world
 
 sleep 5
@@ -23,7 +13,7 @@ sudo mv ./kind /usr/local/bin/kind
 
 kind create cluster --name seed
 
-curl -LO "https://dl.k8s.io/release/\$(curl -s https://dl.k8s.io/release/stable.txt)/bin/linux/amd64/kubectl"
+curl -LO "https://dl.k8s.io/release/v1.33.2/bin/linux/amd64/kubectl"
 chmod +x kubectl
 sudo mv kubectl /usr/local/bin/
 kubectl version --client
@@ -43,18 +33,12 @@ helm version
 
 sleep 5
 
-kubectl apply --server-side -f https://docs.k0smotron.io/v1.1.2/install.yaml
-
-echo "Pause de 110 secondes pour laisser les pods démarrer"
-sleep 110
-
-kubectl get pods -n k0smotron
-
 curl -L https://github.com/kubernetes-sigs/cluster-api/releases/download/v1.10.3/clusterctl-linux-amd64 -o clusterctl
 chmod +x clusterctl && sudo mv clusterctl /usr/local/bin/clusterctl
 clusterctl version
 
-clusterctl init --bootstrap k0sproject-k0smotron --control-plane k0sproject-k0smotron --infrastructure k0sproject-k0smotron
+export CLUSTER_TOPOLOGY=true
+clusterctl init --infrastructure docker
 
 echo "Pause de 60 secondes, intialisation de CAPI"
 sleep 60
