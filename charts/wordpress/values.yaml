@@ -1,0 +1,12 @@
+namespace: wordpress
+wordpress:
+  service:
+    type: LoadBalancer    # NodePort si pas de LB
+  wordpressUsername: admin
+  wordpressPassword: changeme
+  mariadb:
+    auth:
+      rootPassword: changeme
+    primary:
+      persistence:
+        size: 8Gi

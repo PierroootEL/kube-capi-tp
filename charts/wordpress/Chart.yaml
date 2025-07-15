@@ -1,0 +1,10 @@
+apiVersion: v2
+name: wordpress
+description: Wrapper chart that deploys WordPress in its own namespace
+type: application
+version: 0.1.0
+appVersion: "6.5"
+dependencies:
+  - name: wordpress
+    version: 25.0.1     # chart version
+    repository: https://charts.bitnami.com/bitnami

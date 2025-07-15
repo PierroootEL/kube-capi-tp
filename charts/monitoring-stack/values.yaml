@@ -1,0 +1,21 @@
+namespace: monitoring
+
+loki:
+  loki:
+    commonConfig:
+      replication_factor: 1
+    storage:
+      type: filesystem
+
+grafana:
+  adminPassword: changeme
+  service:
+    type: LoadBalancer
+
+vector:
+  role: Aggregator
+  sinks:
+    loki:
+      type: loki
+      inputs: ["logs"]
+      endpoint: http://loki:3100
